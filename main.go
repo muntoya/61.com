@@ -3,28 +3,41 @@ package main
 import (
 	"fmt"
 	"net/http"
-	//"strings"
+	"strings"
 	"log"
+	//"61.com/utils"
 )
 
-var cnt int
 
 func hi(w http.ResponseWriter, r *http.Request) {
-//	r.ParseForm()
-//	fmt.Println(r.Form)
-//	fmt.Println("path", r.URL.Path)
-//	fmt.Println("scheme", r.URL.Scheme)
-//	for k, v := range(r.Form) {
-//		fmt.Println("key: ", k)
-//		fmt.Println("value: ", strings.Join(v, ""))
-//	}
-//
-	fmt.Fprintln(w, "hello")
-	cnt += 1
+	r.ParseForm()
+	fmt.Println(r.Form)
+	fmt.Println(r.Method)
+	fmt.Println("path", r.URL.Path)
+	fmt.Println("scheme", r.URL.Scheme)
+	fmt.Println(r.Form["user"])
+	for k, v := range(r.Form) {
+		fmt.Println("key: ", k)
+		fmt.Println("value: ", strings.Join(v, ""))
+	}
+
+	html := `<html>
+	<head>
+	<title></title>
+	</head>
+	<body>
+	<form action="/login" method="post">
+	    用户名:<input type="text" name="username">
+	    密码:<input type="password" name="password">
+	    <input type="submit" value="登陆">
+	</form>
+	</body>
+	</html>`
+	fmt.Fprintln(w, html)
 }
 
 func main() {
-	cnt = 0
+
 	http.HandleFunc("/", hi)
 	err := http.ListenAndServe(":9090", nil)
 	if err != nil {
